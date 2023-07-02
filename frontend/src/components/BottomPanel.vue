@@ -35,4 +35,22 @@ export default {
 .pagination {
   width: 90%;
 }
+
+@media (max-width: 965px){
+  .pagination {
+    width: 85%;
+  }
+}
+
+@media (max-width: 570px){
+  .pagination {
+    width: 80%;
+  }
+}
+
+@media (max-width: 290px){
+  .pagination {
+    width: 80%;
+  }
+}
 </style>

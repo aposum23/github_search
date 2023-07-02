@@ -2,7 +2,7 @@
   <div>
     <SearchBar/>
     <CardsList/>
-    <BottomPanel/>
+    <BottomPanel v-if="showBottomPanel"/>
   </div>
 </template>
 
@@ -25,6 +25,11 @@ export default {
     SearchBar,
     CardsList,
     BottomPanel,
+  },
+  computed:{
+    showBottomPanel(){
+      return this.$store.state.showBottomPanel;
+    }
   }
 }
 </script>

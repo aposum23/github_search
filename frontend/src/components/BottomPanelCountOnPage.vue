@@ -1,11 +1,11 @@
 <template>
   <div class="bottom-panel__count-on-page">
-    <select class="count-on-page" v-model="countOfCards" @change="changeCountOnPage">
-      <option>9</option>
-      <option>12</option>
-      <option>15</option>
-      <option>18</option>
-      <option>21</option>
+    <select class="count-on-page" v-model="countOfCards" :value="currentCount" @change="changeCountOnPage">
+      <option value="9">9</option>
+      <option value="12">12</option>
+      <option value="15">15</option>
+      <option value="18">18</option>
+      <option value="21">21</option>
     </select>
   </div>
 </template>
@@ -20,23 +20,23 @@ export default {
       countOfCards: 9,
     }
   },
-  computed: {
-    currentCount(){
-      return this.$store.state.countOnPage;
-    }
-  },
   methods: {
     changeCountOnPage(){
       this.$store.commit('changeCountOnPage', this.countOfCards);
-      this.$store.dispatch('doSearch');
+      this.$store.dispatch('doSearch', false);
     }
-  }
+  },
+  mounted:
+    function(){
+      this.countOfCards = this.$store.state.countOnPage;
+    }
 }
 </script>
 
 <style scoped>
 .count-on-page {
   display: inline-block;
+  outline: none;
   border: 1px solid #A2A3A4;
   font: inherit;
   letter-spacing: inherit;
