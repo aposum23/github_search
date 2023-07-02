@@ -105,9 +105,6 @@ export default createStore({
       }
       axios.get('https://api.github.com/search/repositories', 
       {
-        headers: {
-          auth: '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',
-        },
         params: {
           q: state.userSearchValue,
           per_page: state.countOnPage,
