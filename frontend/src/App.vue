@@ -1,6 +1,7 @@
 <template>
   <div>
     <SearchBar/>
+    <CardsList/>
   </div>
 </template>
 
@@ -10,11 +11,15 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 // Импорт компонентов
 import SearchBar from '@/components/SearchBar.vue';
+import CardsList from './components/CardsList.vue';
+import store from '@/store/index.js';
 
 export default {
   name: 'App',
+  store,
   components: {
     SearchBar,
+    CardsList,
   }
 }
 </script>
@@ -28,7 +33,6 @@ body {
   margin: 0px;
 }
 #app {
-  text-align: center;
   font-family: 'Roboto';
 }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="search-bar">
     <div class="search-bar__form">
-      <input type="text" class="search-bar__input" :value="searchText" @focusin="clearSearchField" @focusout="findOrResetSearchValue"/>
-      <button class="search-bar__button buttons">
+      <input type="text" class="search-bar__input" v-model="searchText" @focusin="clearSearchField" @focusout="saveOrResetSearchValue"/>
+      <button class="search-bar__button buttons" @click="doSearch">
         <img src="@/assets/search.svg"/>
       </button>
     </div>
@@ -22,11 +22,18 @@ export default {
       this.searchText = '';
     },
 
-    findOrResetSearchValue(){
+    saveOrResetSearchValue(){
       // Проверяем, если количество символов < 3 то очищаем поле и возвращаем надпись, иначе оставляем
       if (this.searchText.length < 3){
         this.searchText = 'Начните вводить текст для поиска (не менее трех символов)';
       }
+      else {
+        this.$store.commit('updateSearchValue', this.searchText);
+      }
+    },
+
+    doSearch(){
+      this.$store.dispatch('doSearch');
     }
   }
 }
@@ -34,6 +41,7 @@ export default {
 
 <style scoped>
 .search-bar {
+  text-align: center;
   width: 100%;
   height: 11.6em;
   background-color: #DDDDDD;
