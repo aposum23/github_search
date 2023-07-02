@@ -8,6 +8,9 @@ export default createStore({
     countOnPage: 9,
     pageNumber: 1,
     totalCountPages: 1,
+    projectData: {},
+    showDetails: false,
+    showBottomPanel: false,
   },
   getters: {
   },
@@ -23,10 +26,13 @@ export default createStore({
           state.totalCountPages = 100;
         }
         state.searchResult = result.data.items;
+        state.showBottomPanel = true;
+        localStorage.totalCountPages = state.totalCountPages;
       }
       // Если Null назначаем состоянию результата запроса пустой массив
       else {
-        state.searchResult = []
+        state.searchResult = [],
+        state.totalCountPages = 1;
       }
     },
 
@@ -35,9 +41,10 @@ export default createStore({
       state.userSearchValue = value;
     },
 
-    // Возвращаем пользователя к первой странице при новом зарпосе поиска
-    resetPageNumber(state){
-      state.pageNumber = 1;
+    // Меняем номер страницы на необходимый
+    changePageNumber(state, pageNum){
+      state.pageNumber = pageNum;
+      localStorage.pageNumber = state.pageNumber;
     },
 
     // Мутация, уменьшающая номер страницы на 1
@@ -47,6 +54,7 @@ export default createStore({
       if (state.pageNumber > 1){
         state.pageNumber -= 1;
       }
+      localStorage.pageNumber = state.pageNumber;
     },
 
     // Мутация, увеличивающая номер страницы на 1
@@ -55,16 +63,46 @@ export default createStore({
       if (state.pageNumber < state.totalCountPages){
         state.pageNumber += 1;
       }
+      localStorage.pageNumber = state.pageNumber;
     },
 
     // Мутация меняющая количество карточек отображаемых на странице
     changeCountOnPage(state, newCount){
       state.countOnPage = newCount;
+      localStorage.countOnPage = state.countOnPage;
+    },
+
+    showMore(state, index){
+      state.showDetails = true;
+      state.showBottomPanel = false;
+      console.log(state.showDetails);
+      state.projectData = state.searchResult[index];
+    },
+
+    closeDetails(state){
+      state.showDetails = false;
+      state.showBottomPanel = true;
+      state.projectData = {};
+    },
+
+    recoverData(state){
+      if (localStorage.pageNumber){
+        state.pageNumber = Number(localStorage.pageNumber);
+      }
+      if (localStorage.totalCountPages){
+        state.totalCountPages = Number(localStorage.totalCountPages);
+      }
+      if (localStorage.countOnPage){
+        state.countOnPage = Number(localStorage.countOnPage);
+      }
     }
   },
   actions: {
     // Действие поиска проектов через github api
-    doSearch({commit, state}){
+    doSearch({commit, state}, newSearch){
+      if (newSearch){
+        commit('changePageNumber', 1);
+      }
       axios.get('https://api.github.com/search/repositories', 
       {
         headers: {
@@ -78,6 +116,11 @@ export default createStore({
       }
       ).then(result => commit('updateResult', result) // Если завершается без ошибок обрабатываем результат
       ).catch(() => commit('updateResult', null)); // Иначе передаем в тот же метод null (который в условии даст false)
+    },
+    
+    recoverDataAfterReload({commit, dispatch}){
+      commit('recoverData');
+      dispatch('doSearch', false);
     }
   },
   modules: {

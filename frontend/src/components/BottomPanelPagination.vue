@@ -3,7 +3,7 @@
     <button class="pagination-button" @click="decrementPage">
       <img src="../assets/arrowLeft.png"/>
     </button>
-    <button class="pagination-button" v-for="pageNumber in 3" :key="pageNumber" :class="{active: buttonActive(pageNumber)}">
+    <button class="pagination-button" v-for="pageNumber in 3" :key="pageNumber" @click="changePage(pageNumber)" :class="{active: buttonActive(pageNumber)}">
       <span class="page-number">{{ pageNumber + startNumber - 1 }}</span>
     </button>
     <button class="pagination-button" @click="incrementPage">
@@ -28,8 +28,11 @@ export default {
       if (pageNum === this.startNumOfPagination + 3){
         this.changeStartNumOfPagination(pageNum);
       }
-      else if (pageNum === this.startNumOfPagination - 1){
+      else if (pageNum === this.startNumOfPagination - 1 || pageNum % 3 === 0){
         this.changeStartNumOfPagination(pageNum - 2);
+      }
+      else if (pageNum % 3 > 1){
+        this.changeStartNumOfPagination(pageNum - (pageNum % 3) + 1)
       }
       return this.startNumOfPagination;
     }
@@ -52,12 +55,20 @@ export default {
       this.reloadSearchResult();
     },
 
+    // Метод изменения страницы
+    changePage(pageNumber){
+      this.$store.commit('changePageNumber', this.startNumOfPagination + pageNumber - 1);
+      this.reloadSearchResult();
+    },
+
     reloadSearchResult(){
-      this.$store.dispatch('doSearch');
+      this.$store.dispatch('doSearch', false);
     },
 
     buttonActive(pageNumber){
-      const currentPageNumber = this.$store.state.pageNumber; 
+      const currentPageNumber = this.$store.state.pageNumber;
+      //console.log(currentPageNumber);
+      //console.log(pageNumber + this.startNumber - 1);
       if (pageNumber + this.startNumber - 1 === currentPageNumber){
         return true;
       }

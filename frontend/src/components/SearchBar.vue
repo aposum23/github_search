@@ -28,14 +28,23 @@ export default {
         this.searchText = 'Начните вводить текст для поиска (не менее трех символов)';
       }
       else {
+        localStorage.setItem('searchText', this.searchText)
         this.$store.commit('updateSearchValue', this.searchText);
       }
     },
 
     doSearch(){
-      this.$store.dispatch('doSearch');
+      this.$store.dispatch('doSearch', true);
     }
-  }
+  },
+  mounted:
+    function(){
+      if (localStorage.searchText){
+        this.searchText = localStorage.searchText;
+        this.saveOrResetSearchValue();
+      }
+      this.$store.dispatch('recoverDataAfterReload');
+    }
 }
 </script>
 
@@ -56,6 +65,7 @@ export default {
   display: inline-block;
   vertical-align: middle;
   font-weight: 600;
+  outline: none;
 }
 
 .search-bar__button {
@@ -64,5 +74,23 @@ export default {
   display: inline-block;
   vertical-align: middle;
   line-height: 4em;
+}
+
+@media (max-width: 965px){
+  .search-bar__input {
+    width: 80%;
+  }
+}
+
+@media (max-width: 570px){
+  .search-bar__input {
+    width: 70%;
+  }
+}
+
+@media (max-width: 290px){
+  .search-bar__input {
+    width: 65%;
+  }
 }
 </style>

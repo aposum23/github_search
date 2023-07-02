@@ -1,30 +1,29 @@
 <template>
   <div class="container card-of-project">
     <div class="row">
-      <h3 class="col-12">{{ projectName }}</h3>
+      <a class="project-name col-12" :href="projectUrl" target="_blank">{{ projectName }}</a>
     </div>
     <div class="row">
-      <div class="col-2">
-        <img :src="authorImage" class="col-12"/>
+      <div class="col-4 col-sm-2 col-md-3 col-lg-2">
+        <img :src="authorImage" class="author-image col-12"/>
       </div>
       <div class="col-10">
-        <h3 class="col-11">{{ authorName }}</h3>
+        <a class="col-12 author-name" :href="authorUrl" target="_blank">{{ authorName }}</a>
       </div>
     </div>
     <div class="row">
       <div class="col-3">
         <img src="../assets/star.svg" class="col-3 d-inline"/>
-        <p class="d-inline col-2">{{ countOfStars }}</p>
+        <p class="d-inline col-2 stat-numbers">{{ countOfStars }}</p>
       </div>
       <div class="col-3">
         <img src="../assets/view.svg" class="col-3 d-inline"/>
-        <p class="d-inline col-2">{{ countOfViews }}</p>
+        <p class="d-inline col-2 stat-numbers">{{ countOfViews }}</p>
       </div>
     </div>
-    <div class="comment-form">
-      <input type="text" class="comment-form__input" v-model="userComment" @focusin="clearSearchField" @focusout="saveOrResetSearchValue"/>
-      <button class="comment-form__button buttons" @click="doSearch">
-        <img src="@/assets/comment.svg" class="h-100 w-100"/>
+    <div class="show-more">
+      <button class="show-more__button buttons" @click="showMore">
+        <p>Подробнее</p>
       </button>
     </div>
   </div>
@@ -34,18 +33,24 @@
 export default {
   name: 'CardOfProject',
   props: {
+    projectIndex: Number,
+    projectId: String,
     projectName: String,
     authorImage: String,
     authorName: String,
-    countOfStars: String,
-    countOfViews: String,
+    countOfStars: Number,
+    countOfViews: Number,
+    projectUrl: String,
+    authorUrl: String,
   },
   data() {
     return {
-      userComment: 'Комментарий к проекту'
     }
   },
   methods: {
+    showMore(){
+      this.$store.commit('showMore', this.projectIndex);
+    }
   }
 }
 </script>
@@ -53,22 +58,42 @@ export default {
 <style scoped>
 .card-of-project {
   border: 1px solid #A2A3A4;
+  box-shadow: 0 4 4 #00000040;
   padding: 1em;
+  margin: .5em;
 }
 
-.comment-form__input {
+.show-more__button {
   height: 3em;
-  width: 81%;
-  padding: 1em;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.comment-form__button {
-  height: 3em;
-  width: 3em;
+  width: 100%;
   display: inline-block;
   vertical-align: middle;
   line-height: 3em;
+}
+
+.row {
+  padding: .3em;
+}
+
+.project-name {
+  font-size: 18px;
+  height: 2.5rem;
+  text-decoration: none;
+  color: #000;
+}
+
+.author-image {
+  border-radius: 90px;
+}
+
+.author-name {
+  font-size: 14px;
+  text-decoration: none;
+  color: #000;
+}
+
+.stat-numbers {
+  font-size: 16px;
+  padding-left: .5em;
 }
 </style>
