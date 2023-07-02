@@ -2,6 +2,7 @@
   <div>
     <SearchBar/>
     <CardsList/>
+    <BottomPanel/>
   </div>
 </template>
 
@@ -12,6 +13,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 // Импорт компонентов
 import SearchBar from '@/components/SearchBar.vue';
 import CardsList from './components/CardsList.vue';
+import BottomPanel from './components/BottomPanel.vue';
+
+// Импорт хранилища vuex
 import store from '@/store/index.js';
 
 export default {
@@ -20,6 +24,7 @@ export default {
   components: {
     SearchBar,
     CardsList,
+    BottomPanel,
   }
 }
 </script>
